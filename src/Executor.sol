@@ -3,6 +3,8 @@ pragma solidity ^0.8.25;
 
 import "./Constant.sol";
 import { IExecutor } from "./IExecutor.sol";
+
+
 abstract contract Executor is IExecutor {
     constructor() {
     }
@@ -11,9 +13,9 @@ abstract contract Executor is IExecutor {
         assembly {
             let ptr := mload(0x40)
             mstore(ptr, ERC20_transferFrom_selector)
-            mstore(add(ptr, 0x04), from)
-            mstore(add(ptr, 0x24), to)
-            mstore(add(ptr, 0x44), amount)
+            mstore(add(ptr, ERC20_transferFrom_from_offset), from)
+            mstore(add(ptr, ERC20_transferFrom_to_offset), to)
+            mstore(add(ptr, ERC20_transferFrom_amount_offset), amount)
             success := call(gas(), token, 0, ptr, ERC20_transferFrom_size, 0, 0)
         }
         // require(success, "transfer failed");
@@ -27,8 +29,8 @@ abstract contract Executor is IExecutor {
         assembly {
             let ptr := mload(0x40)
             mstore(ptr, ERC20_transfer_selector)
-            mstore(add(ptr, 0x04), to)
-            mstore(add(ptr, 0x24), amount)
+            mstore(add(ptr, ERC20_transfer_to_offset), to)
+            mstore(add(ptr, ERC20_transfer_amount_offset), amount)
             success := call(gas(), token, 0, ptr, ERC20_transfer_size, 0, 0)
         }
         if (!success) {
