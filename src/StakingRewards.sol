@@ -15,9 +15,12 @@ contract StakingRewards is Executor, ReentrancyGuard, Ownable {
 
     constructor(
     ) Ownable(msg.sender) {} 
-    function Stake(uint256 amount) public nonReentrant  {
-        _safeTransferFrom(stakingToken, address(this), msg.sender, amount);
+    function Stake(address stakingToken, uint256 amount) public nonReentrant  {
+        _safeTransferFrom(stakingToken, msg.sender, address(this), amount);
+    }
 
+    function unStake(address stakingToken, uint256 amount) public nonReentrant  {
+        _safeTransfer(stakingToken, msg.sender, amount);
     }
 
 
