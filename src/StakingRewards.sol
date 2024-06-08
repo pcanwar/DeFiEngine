@@ -2,7 +2,7 @@
 pragma solidity ^0.8.25;
 
 // import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 import {StakeInfo} from "./Struct.sol";
 import "./Executor.sol";

@@ -12,7 +12,7 @@ import {MockERC20} from "./mocks/MockERC20.sol";
 contract BaseTest is Test {
 
     // using SafeMath for uint256;
-    StakingRewards public stakingRewards;
+    StakingRewards public task;
     uint256 maxAmountToMint = 20e18;
     MockERC20 public testToken;
 
@@ -32,7 +32,7 @@ contract BaseTest is Test {
         vm.prank(userA);
         task = new StakingRewards();
 
-        testToken = new MockERC20("A", "a");
+        testToken = new MockERC20();
 
         console.log("userA", userA);
         console.log("userB", userB);
