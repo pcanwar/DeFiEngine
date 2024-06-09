@@ -14,18 +14,23 @@ The contract allows users to stake ERC20 tokens in exchange for rewards. Users c
 
 
 ### Mathematical Formulas
-
 1. **Reward Per Token Calculation**:
-   ```markdown
-   accumulatedRewardPerToken = accumulatedRewardPerToken + 
-   ((block.timestamp - lastRewardUpdate) * baseRewardRate * 10^tokenDecimals) / totalStaked
+    ```markdown
+    accumulatedRewardPerToken = accumulatedRewardPerToken + 
+    ((block.timestamp - lastRewardUpdate) * baseRewardRate * 10^tokenDecimals) / totalStaked
+    ```
 
+2. **Total Earned Rewards Calculation**:
+    ```markdown
     totalRewards = sum(calculateEarnedRewards(events[i], account) for i in range(staker.processedIndex, len(events)))
+    ```
 
+3. **Earned Rewards Calculation**:
+    ```markdown
     earnedRewards = (stakingEvent.amount * combinedMultiplier * baseRewardRate * stakingDuration) / 10^tokenDecimals
+    ```
 
+    where:
+    ```markdown
     combinedMultiplier = (timeMultiplier * tierMultiplier) / 10^tokenDecimals
-
-## Tier Multiplier:
-
-    tierMultiplier = rewardMultipliers[i] if totalStaked >= stakeThresholds[i]10^18 otherwise
+    ```
