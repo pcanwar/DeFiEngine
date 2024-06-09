@@ -14,11 +14,11 @@ contract StakingRewards is Executor, Ownable {
     constructor(
     ) Ownable(msg.sender) {} 
     
-    function Stake(address stakingToken, uint256 amount) public   {
-        _safeTransferFrom(stakingToken, msg.sender, address(this), amount);
+    function Stake(address stakingToken, address staker, uint256 amount) public   {
+        _safeTransferFrom(stakingToken, staker, address(this), amount);
     }
 
-    function unStake(address stakingToken, uint256 amount) public   {
+    function UnStake(address stakingToken, uint256 amount) public   {
         _safeTransfer(stakingToken, msg.sender, amount);
     }
 

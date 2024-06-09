@@ -14,7 +14,7 @@ contract BaseTest is Test {
     // using SafeMath for uint256;
     StakingRewards public task;
     uint256 maxAmountToMint = 20e18;
-    MockERC20 public testToken;
+    MockERC20 public mockERC20;
 
     address internal userA;
     address internal userB;
@@ -32,7 +32,7 @@ contract BaseTest is Test {
         vm.prank(userA);
         task = new StakingRewards();
 
-        testToken = new MockERC20();
+        mockERC20 = new MockERC20();
 
         console.log("userA", userA);
         console.log("userB", userB);
@@ -43,54 +43,60 @@ contract BaseTest is Test {
     }
 }
 
-// contract Mock20Token is BaseTest {
-//     function setUp() public virtual override {
-//         BaseTaskTest.setUp();
-//         console.log("Test mint and check the balnce");
-//     }
+contract Mock20Token is BaseTest {
+    function setUp() public virtual override {
+        BaseTest.setUp();
+        console.log("Test mint and check the balnce");
+    }
 
-//     function mint(
-//         MockERC20 erc20ContractAddress,
-//         address to,
-//         uint256 amount
-//     ) internal {
-//         vm.prank(to);
-//         erc20ContractAddress.mint(to, amount);
-//     }
+    function mint(
+        MockERC20 mockERC20,
+        address to,
+        uint256 amount
+    ) public {
+        vm.prank(to);
+        mockERC20.mint(to, amount);
+    }
 
-//     function approve(
-//         MockERC20 erc20ContractAddress,
-//         address caller,
-//         address spender,
-//         uint256 amount
-//     ) internal {
-//         vm.prank(caller);
-//         erc20ContractAddress.approve(spender, amount);
-//     }
-// }
+    function approve(
+        MockERC20 mockERC20,
+        address caller,
+        address spender,
+        uint256 amount
+    ) internal {
+        vm.prank(caller);
+        mockERC20.approve(spender, amount);
+    }
+}
 
-// contract UserMintandDepositToTask is Mock20Token {
-//     function setUp() public override {
-//         Mock20Token0.setUp();
-//         console.log("Mock20Token is ready ");
-//     }
+contract UserMintandDepositToTask is Mock20Token {
+    function setUp() public override {
+        Mock20Token.setUp();
+        console.log("Mock20Token is ready ");
+    }
 
-//     function testSend() public {
-//         // user A mint and approve tokens 
-//         MockERC20 XERC20Token = MockERC20(address(_0_mockERC20));
-//         mint(XERC20Token, userA, maxAmountToMint);
-//         assertEq(XERC20Token.balanceOf(userA), maxAmountToMint);
-//         console.log(userA, " minting  ", maxAmountToMint);
+    function testSend() public {
+        // user A mint and approve tokens 
+        MockERC20 XERC20Token = MockERC20(address(mockERC20));
 
-//         approve(XERC20Token, userA, address(task), approveAmount);
 
-//         // stakeReward recived the token
-//         bool res = task.stake(
-//             address(XERC20Token),
-//             userA,
-//             maxAmountToMint
-//         );
-//         assertTrue(res);
-//     }
+        mint(XERC20Token, userA, maxAmountToMint);
+        assertEq(XERC20Token.balanceOf(userA), maxAmountToMint, "User Bla eq");
+        console.log(userA, " minting  ", maxAmountToMint);
 
-// }
+        // uint256 approveAmount = maxAmountToMint ;
+        // vm.prank(userA);
+        approve(XERC20Token, userA, address(task), maxAmountToMint);
+
+        // // stakeReward recived the token
+        vm.prank(userA);
+        task.Stake(address(XERC20Token),userA, maxAmountToMint);
+        console.log("balanceXERC20Token :");
+        // console.log(address(XERC20Token));
+        assertEq(mockERC20.balanceOf(address(task)), maxAmountToMint);
+        // assert
+        // 0xE5B20Fb06A9dB27b835626a92Cb09d47Aea4aF59
+        // assertTrue(res);
+    }
+
+}
