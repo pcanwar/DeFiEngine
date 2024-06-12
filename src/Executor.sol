@@ -7,10 +7,12 @@ import { IExecutor } from "./IExecutor.sol";
 abstract contract Executor is IExecutor {
     constructor() {
     }
+
+
     function _safeTransferFrom(address token, address from, address to, uint256 amount) internal {
         bool success;
         assembly {
-            let ptr := mload(0x40)
+            let ptr := mload(Memory_pointer)
             mstore(ptr, ERC20_transferFrom_selector)
             mstore(add(ptr, ERC20_transferFrom_from_offset), from)
             mstore(add(ptr, ERC20_transferFrom_to_offset), to)
@@ -26,7 +28,7 @@ abstract contract Executor is IExecutor {
     function _safeTransfer(address token, address to, uint256 amount) internal {
         bool success;
         assembly {
-            let ptr := mload(0x40)
+            let ptr := mload(Memory_pointer)
             mstore(ptr, ERC20_transfer_selector)
             mstore(add(ptr, ERC20_transfer_to_offset), to)
             mstore(add(ptr, ERC20_transfer_amount_offset), amount)
@@ -37,6 +39,6 @@ abstract contract Executor is IExecutor {
         }
     }
 
-    
+
 
 }
