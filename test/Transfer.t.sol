@@ -37,7 +37,7 @@ contract BaseTest is Test {
         console.log("userA", userA);
         console.log("userB", userB);
         console.log("userC", userC);
-        console.log(" owner  ", task.owner());
+        // console.log(" owner  ", task.owner());
         console.log(" contract address  ", address(task));
 
     }
@@ -78,7 +78,7 @@ contract UserMintandDepositToTask is Mock20Token {
     function testSend() public {
         // user A mint and approve tokens 
         MockERC20 XERC20Token = MockERC20(address(mockERC20));
-
+        task.init(address(XERC20Token), address(XERC20Token));
 
         mint(XERC20Token, userA, maxAmountToMint);
         assertEq(XERC20Token.balanceOf(userA), maxAmountToMint, "User Bla eq");
@@ -90,7 +90,7 @@ contract UserMintandDepositToTask is Mock20Token {
 
         // // stakeReward recived the token
         vm.prank(userA);
-        task.Stake(address(XERC20Token),userA, maxAmountToMint);
+        task.Stake(userA, maxAmountToMint);
         console.log("balanceXERC20Token :");
         // console.log(address(XERC20Token));
         assertEq(mockERC20.balanceOf(address(task)), maxAmountToMint);

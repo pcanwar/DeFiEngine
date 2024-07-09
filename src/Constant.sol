@@ -13,6 +13,8 @@ uint256 constant ERC20_transfer_amount_offset = 0x24;
 uint256 constant ERC20_transfer_size = 0x44;
 
 uint256 constant ERC20_decimals_selector = 0x313ce56700000000000000000000000000000000000000000000000000000000;
+uint256 constant ERC20_balanceOf_selector = 0x70a0823100000000000000000000000000000000000000000000000000000000;
+uint256 constant ERC20_totalSupply_selector = 0x18160ddd00000000000000000000000000000000000000000000000000000000;
 
 uint256 constant SECONDS_IN_A_DAY = 86400;
 uint256 constant Memory_pointer = 0x40;
