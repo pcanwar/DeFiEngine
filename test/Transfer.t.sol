@@ -97,6 +97,13 @@ contract UserMintandDepositToTask is Mock20Token {
         // assert
         // 0xE5B20Fb06A9dB27b835626a92Cb09d47Aea4aF59
         // assertTrue(res);
+        uint256 balUserA = task.balanceOf(address(userA));
+        console.log("balance userA :", balUserA);
+
+        vm.prank(userA);
+        task.UnStake(address(userA), balUserA );
+        // assertEq(mockERC20.balanceOf(address(task)), 0);
+
     }
 
 }
