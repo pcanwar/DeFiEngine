@@ -25,8 +25,14 @@ contract StakingRewards is Executor {
     mapping(uint256 => uint256) public timeMultipliers;
 
     mapping(address => bytes32) public _stakers;
-    mapping(address => uint256) public _rewards;
-    mapping(address account => uint256) private _balances;
+    // mapping(address => uint256) public _rewards;
+    mapping(address => mapping(address => uint256)) public _rewards;
+
+    mapping(address => uint256) private _balances;
+
+    mapping(address => uint256) private _stakingDurations;
+    mapping(address => uint256) private _stakingStartTimes;
+
 
     event ClaimedRewards(address account, uint256 reward);
     event TokensRecovered(address token, uint256 amount);
@@ -78,6 +84,9 @@ contract StakingRewards is Executor {
         StakeInfo memory info = getStakerInfo(staker);
         info.amount += amount;
         updateStakerInfo(staker, info);
+        
+        _stakingStartTimes[msg.sender] = block.timestamp;
+        _stakingDurations[msg.sender] = 15 days;
 
         _safeTransferFrom(stakingToken_, staker, address(this), amount);
  
@@ -103,15 +112,13 @@ contract StakingRewards is Executor {
     }
 
     // TODO: implement  nonReentrant
+    // implemet non reentrant and check and decrease the total supply . 
 
-    function claimedRewards(address rewardToken_) public rewardTokenInterface(rewardToken_){
-        // implemet non reentrant and check and decrease the total supply . 
+    function claimedRewards(address  rewardToken_) public rewardTokenInterface(rewardToken_){
 
-        uint256 rewardsAmount = _rewards[msg.sender];
+        uint256 rewardsAmount = _rewards[rewardToken_][msg.sender];
         if (rewardsAmount > 0) {
-            _rewards[msg.sender] = 0;
-            // address _rewardToken = address(rewardToken);
-
+            _rewards[rewardToken_][msg.sender] = 0;
             _safeTransfer(rewardToken_, msg.sender, rewardsAmount);
             emit ClaimedRewards(msg.sender, rewardsAmount);  
         }
