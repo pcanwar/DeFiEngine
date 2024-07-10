@@ -16,12 +16,14 @@ contract StakingRewards is Executor {
     using SafeERC20 for IERC20;
     
     uint256 private _totalSupply;
+    uint256 private _rewardPeriodEnd;
+    uint256 public lastRewardUpdateTime;  
 
     IERC20 public _stakingToken;
 
     mapping(IERC20 => bool) public _rewardToken;
     // mapping(IERC20 => bool) public _stakingToken;
-
+    mapping(address => uint256) public _rewardRate;
     mapping(uint256 => uint256) public timeMultipliers;
 
     mapping(address => bytes32) public _stakers;
@@ -32,7 +34,6 @@ contract StakingRewards is Executor {
 
     mapping(address => uint256) private _stakingDurations;
     mapping(address => uint256) private _stakingStartTimes;
-
 
     event ClaimedRewards(address account, uint256 reward);
     event TokensRecovered(address token, uint256 amount);
@@ -124,6 +125,29 @@ contract StakingRewards is Executor {
         }
         
     }
+
+    function lastTimeRewardApplicable() public view returns (uint256) {
+        if (block.timestamp < _rewardPeriodEnd) {
+            return block.timestamp;
+        } else {
+            return _rewardPeriodEnd;
+        }
+    }
+
+    // TODO remove 1e18 and need to read from the contract 
+    // TODO decimals should be low level 
+    function updateRewardPerToken(address rewardAddress) public view returns (uint256){
+        if (_totalSupply == 0) {
+            return lastRewardUpdateTime;
+        }
+        // uint256 tokenDecimals = .decimals();
+        // uint256 scalingFactor = 10**tokenDecimals;
+        uint256 timeElapsed = lastTimeRewardApplicable() - lastRewardUpdateTime; 
+        uint256 rewardContribution = timeElapsed * _rewardRate[rewardAddress] * 1e18 / _totalSupply; 
+        return lastRewardUpdateTime + rewardContribution; 
+    }
+
+
     // TODO: implement onlyOwner 
     /**
      * @notice Allows to recover non-staking ERC20 tokens sent by a mistake to this contract.
