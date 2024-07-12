@@ -16,6 +16,7 @@ contract StakingRewards is Executor {
     using SafeERC20 for IERC20;
     
     uint256 private _totalSupply;
+
     uint256 private _rewardPeriodEnd;
     uint256 public lastRewardUpdateTime;  
 
