@@ -4,15 +4,16 @@ pragma solidity ^0.8.25;
 // import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import {StakeInfo} from "./Struct.sol";
+import {StakerInfo, User} from "./Struct.sol";
 import "./Executor.sol";
+import "./Registry.sol";
 import { StakerEncoding } from "./StakerEncoding.sol";
 
 
-contract StakingRewards is Executor {
+contract StakingRewards is Executor, Registry {
     
-    using StakerEncoding for StakeInfo;
-    using StakerEncoding for bytes32;
+    // using StakerEncoding for StakerInfo;
+    // using StakerEncoding for bytes32;
     using SafeERC20 for IERC20;
     
     uint256 private _totalSupply;
@@ -36,6 +37,7 @@ contract StakingRewards is Executor {
     mapping(address => uint256) private _stakingDurations;
     mapping(address => uint256) private _stakingStartTimes;
 
+
     event ClaimedRewards(address account, uint256 reward);
     event TokensRecovered(address token, uint256 amount);
     event Unstaked(address indexed user, uint256 amount);
@@ -52,7 +54,7 @@ contract StakingRewards is Executor {
     * A cryptocurrency address has to be supported
     */
     modifier rewardTokenInterface(address _contract) {
-        require(_rewardToken[IERC20(_contract)] == true,"Contract address is not Supported ");
+        require(_rewardToken[IERC20(_contract)] == true,"Contract address is not supported ");
         _;
     }
      constructor(){
@@ -83,9 +85,9 @@ contract StakingRewards is Executor {
         }
         address stakingToken_ = address(_stakingToken);
         _balances[staker] += amount;
-        StakeInfo memory info = getStakerInfo(staker);
-        info.amount += amount;
-        updateStakerInfo(staker, info);
+        // StakerInfo memory info = getStakerInfo(staker);
+        // info.amount += amount;
+        // updateStakerInfo(staker, info);
         
         _stakingStartTimes[msg.sender] = block.timestamp;
         _stakingDurations[msg.sender] = 15 days;
@@ -173,12 +175,12 @@ contract StakingRewards is Executor {
     }
 
 
-    function getStakerInfo(address staker) public view returns (StakeInfo memory) {
-        return _stakers[staker].decode();
-    }
+    // function getStakerInfo(address staker) public view returns (StakerInfo memory) {
+    //     return _stakers[staker].decode();
+    // }
 
-    function updateStakerInfo(address staker, StakeInfo memory info) internal {
-        _stakers[staker] = info.encode();
-    }
+    // function updateStakerInfo(address staker, StakerInfo memory info) internal {
+    //     _stakers[staker] = info.encode();
+    // }
 
 }
