@@ -34,3 +34,6 @@ The contract allows users to stake ERC20 tokens in exchange for rewards. Users c
     ```markdown
     combinedMultiplier = (timeMultiplier * tierMultiplier) / 10^tokenDecimals
     ```
+
+
+Note: Development on this contract is ongoing, and additional features and advanced improvements are planned in future commits
